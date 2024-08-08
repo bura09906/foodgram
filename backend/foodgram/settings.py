@@ -4,13 +4,13 @@ from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
-SECRET_KEY = 'django-insecure-1k@c@e@kq15x1)a53f^&br3ifu4g#cjwq9*amzlu613!*f+vmg'
+SECRET_KEY = os.getenv('SECRET_KEY') 
 
 
-DEBUG = False
+DEBUG = os.getenv('DEBUG', 'True') == 'True' 
 
 
-ALLOWED_HOSTS = ['158.160.8.113', '127.0.0.1', 'localhost', 'hot-recipes.hopto.org']
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '').split(',') 
 
 
 INSTALLED_APPS = [
