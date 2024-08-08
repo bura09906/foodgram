@@ -2,10 +2,10 @@ from django.conf import settings
 from django.contrib.auth.validators import UnicodeUsernameValidator
 from django.shortcuts import get_object_or_404
 from drf_extra_fields.fields import Base64ImageField
-from rest_framework import serializers
-
 from recipes.models import (Favorite, Ingredient, Recipe, RecipeIngredient,
                             ShoppingCart, ShortLinkForRecipe, Tag, User)
+from rest_framework import serializers
+
 from .pagination import AuthorRecipesPagination
 
 

@@ -1,10 +1,9 @@
+from core.models import UserRecipeRelation
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.db import models
 
-from core.models import UserRecipeRelation
 from .validators import validate_for_recipe
-
 
 User = get_user_model()
 

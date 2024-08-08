@@ -1,26 +1,24 @@
 import hashlib
 
+from core.utils import GenPdfShoppingCart
 from django.shortcuts import get_object_or_404, redirect
 from django_filters.rest_framework import DjangoFilterBackend
 from djoser.conf import settings
 from djoser.views import UserViewSet
-from rest_framework import (permissions, serializers, status,
-                            viewsets)
+from recipes.models import (Favorite, Ingredient, Recipe, ShoppingCart,
+                            ShortLinkForRecipe, Tag, User)
+from rest_framework import permissions, serializers, status, viewsets
+from rest_framework.decorators import action, api_view
 from rest_framework.pagination import LimitOffsetPagination
-from rest_framework.decorators import action
 from rest_framework.response import Response
-from rest_framework.decorators import api_view
 
 from .filters import IngredientFilter, RecipeFilter
+from .pagination import RecipePagination
 from .permissions import RecipePermissiom
 from .serializers import (AvatarSerializer, IngredientSerializer,
                           RecipeActionSerializer, RecipeSerializer,
                           ShortLinkSerializer, SubscribeSerializer,
                           TagSerializer)
-from recipes.models import (Favorite, Ingredient, Recipe, ShoppingCart, Tag,
-                            User, ShortLinkForRecipe)
-from core.utils import GenPdfShoppingCart
-from .pagination import RecipePagination
 
 
 class CustomUserviewSet(UserViewSet):
