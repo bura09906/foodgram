@@ -362,6 +362,7 @@ class ShortLinkSerializer(serializers.ModelSerializer):
         return short_url.short_url
 
     def to_representation(self, instance):
+        base_url = self.context['request'].build_absolute_uri('/')
         return {
-            'short-link': f'http://127.0.0.1:8000/s/{instance}/'
+            'short-link': f'{base_url}s/{instance}/'
         }

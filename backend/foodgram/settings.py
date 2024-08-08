@@ -9,6 +9,7 @@ SECRET_KEY = 'django-insecure-1k@c@e@kq15x1)a53f^&br3ifu4g#cjwq9*amzlu613!*f+vmg
 
 DEBUG = False
 
+
 ALLOWED_HOSTS = ['158.160.8.113', '127.0.0.1', 'localhost', 'hot-recipes.hopto.org']
 
 

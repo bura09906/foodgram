@@ -11,7 +11,7 @@ services:
       - pg_data:/var/lib/postgresql/data
 
   backend:
-    image: bura843/foodgram_backend
+    image: bura843/foodgram_backend:v0.1
     env_file: .env
     depends_on:
       - db

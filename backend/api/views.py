@@ -1,6 +1,6 @@
 import hashlib
 
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, redirect
 from django_filters.rest_framework import DjangoFilterBackend
 from djoser.conf import settings
 from djoser.views import UserViewSet
@@ -9,6 +9,7 @@ from rest_framework import (permissions, serializers, status,
 from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.decorators import action
 from rest_framework.response import Response
+from rest_framework.decorators import api_view
 
 from .filters import IngredientFilter, RecipeFilter
 from .permissions import RecipePermissiom
@@ -17,7 +18,7 @@ from .serializers import (AvatarSerializer, IngredientSerializer,
                           ShortLinkSerializer, SubscribeSerializer,
                           TagSerializer)
 from recipes.models import (Favorite, Ingredient, Recipe, ShoppingCart, Tag,
-                            User)
+                            User, ShortLinkForRecipe)
 from core.utils import GenPdfShoppingCart
 from .pagination import RecipePagination
 
@@ -215,8 +216,16 @@ class RecipeViewSet(viewsets.ModelViewSet):
             data={
                 'id': pk,
                 'short_url': short_url,
-            }
+            },
+            context={'request': request}
         )
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+@api_view(['GET'])
+def redirect_to_recipe(request, short_url):
+    obj = get_object_or_404(ShortLinkForRecipe, short_url=short_url)
+    base_url = request.build_absolute_uri('/')
+    return redirect(f'{base_url}recipes/{obj.recipe.id}')
