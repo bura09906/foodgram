@@ -1,24 +1,42 @@
 import hashlib
 
-from django.db.models import BooleanField, Exists, OuterRef, Value
-from django.shortcuts import get_object_or_404, redirect
+from django.db.models import BooleanField
+from django.db.models import Exists
+from django.db.models import OuterRef
+from django.db.models import Value
+from django.shortcuts import get_object_or_404
+from django.shortcuts import redirect
 from django_filters.rest_framework import DjangoFilterBackend
 from djoser.views import UserViewSet as DjoserUserViewSet
-from rest_framework import permissions, serializers, status, viewsets
-from rest_framework.decorators import action, api_view
+from rest_framework import permissions
+from rest_framework import serializers
+from rest_framework import status
+from rest_framework import viewsets
+from rest_framework.decorators import action
+from rest_framework.decorators import api_view
 from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.response import Response
 
-from recipes.models import (Favorite, Ingredient, Recipe, ShoppingCart,
-                            ShortLinkForRecipe, Tag, User)
+from recipes.models import Favorite
+from recipes.models import Ingredient
+from recipes.models import Recipe
+from recipes.models import ShoppingCart
+from recipes.models import ShortLinkForRecipe
+from recipes.models import Tag
+from recipes.models import User
 
-from .filters import IngredientFilter, RecipeFilter
+from .filters import IngredientFilter
+from .filters import RecipeFilter
 from .pagination import RecipePagination
 from .permissions import RecipePermissiom
-from .serializers import (AvatarSerializer, IngredientSerializer,
-                          RecipeActionSerializer, RecipeReadSerializer,
-                          RecipeWriteSerializer, ShortLinkSerializer,
-                          SubscribeSerializer, TagSerializer)
+from .serializers import AvatarSerializer
+from .serializers import IngredientSerializer
+from .serializers import RecipeActionSerializer
+from .serializers import RecipeReadSerializer
+from .serializers import RecipeWriteSerializer
+from .serializers import ShortLinkSerializer
+from .serializers import SubscribeSerializer
+from .serializers import TagSerializer
 from .shopping_cart import shopping_cart_pdf_generator
 
 
