@@ -71,7 +71,7 @@ class UserviewSet(DjoserUserViewSet):
 
     @action(
         detail=False,
-        methods=['put',],
+        methods=['put'],
         permission_classes=[permissions.IsAuthenticated],
         url_path='me/avatar'
     )
