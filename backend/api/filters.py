@@ -1,7 +1,6 @@
-from django_filters.rest_framework import AllValuesMultipleFilter
-from django_filters.rest_framework import BooleanFilter
-from django_filters.rest_framework import CharFilter
-from django_filters.rest_framework import FilterSet
+from django_filters.rest_framework import (AllValuesMultipleFilter,
+                                           BooleanFilter, CharFilter,
+                                           FilterSet)
 from rest_framework.filters import SearchFilter
 
 from recipes.models import Recipe

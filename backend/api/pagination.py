@@ -1,5 +1,5 @@
-from rest_framework.pagination import LimitOffsetPagination
-from rest_framework.pagination import PageNumberPagination
+from rest_framework.pagination import (LimitOffsetPagination,
+                                       PageNumberPagination)
 
 
 class AuthorRecipesPagination(LimitOffsetPagination):

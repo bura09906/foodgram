@@ -6,12 +6,8 @@ from djoser.serializers import UserSerializer as DjoserUserSerializer
 from drf_extra_fields.fields import Base64ImageField
 from rest_framework import serializers
 
-from recipes.models import Ingredient
-from recipes.models import Recipe
-from recipes.models import RecipeIngredient
-from recipes.models import ShortLinkForRecipe
-from recipes.models import Tag
-from recipes.models import User
+from recipes.models import (Ingredient, Recipe, RecipeIngredient,
+                            ShortLinkForRecipe, Tag, User)
 
 from .pagination import AuthorRecipesPagination
 
