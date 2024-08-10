@@ -1,14 +1,14 @@
 import io
 
 from django.conf import settings
-from django.http import HttpResponse
+from django.http import FileResponse
 from reportlab.lib.pagesizes import A4
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.pdfgen import canvas
 
 
-class GenPdfShoppingCart:
+class ShoppingCartPdfGenerator:
     WIDTH, HEIGHT = A4
     LINE_HEIGHT = 15
     MARGIN_TOP = 50
@@ -51,12 +51,10 @@ class GenPdfShoppingCart:
             y_position -= self.LINE_HEIGHT
         pdf.save()
         buffer.seek(0)
-        response = HttpResponse(
-            buffer.getvalue(),
+        response = FileResponse(
+            buffer,
+            as_attachment=True,
+            filename='Shopping_cart.pdf',
             content_type='application/pdf'
-        )
-        buffer.close()
-        response['Content-Disposition'] = (
-            'attachment; filename="Shopping_cart.pdf"'
         )
         return response

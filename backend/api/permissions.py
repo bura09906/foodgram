@@ -1,12 +1,6 @@
 from rest_framework import permissions
 
 
-class ForbiddingPUT(permissions.BasePermission):
-
-    def has_permission(self, request, view):
-        return False
-
-
 class RecipePermissiom(permissions.BasePermission):
     def has_permission(self, request, view):
         return (
