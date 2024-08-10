@@ -2,3 +2,6 @@
 
 По адресу http://localhost изучите фронтенд веб-приложения, а по адресу http://localhost/api/docs/ — спецификацию API.
 
+Для входа в админ зону hot-recipe.hopto.org:
+почта: reviewer@mail.com
+пароль: 6ni-kNn-uJ9-pAP
