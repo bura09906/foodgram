@@ -23,5 +23,5 @@ def shopping_cart_pdf_generator(user):
                         recipe_ing.ingredient.measurement_unit
                     )
                 }
-        pdf_file = ShoppingCartPdfGenerator(shopping_cart)
-        return pdf_file.return_pdf()
+    pdf_file = ShoppingCartPdfGenerator(shopping_cart)
+    return pdf_file.return_pdf()
