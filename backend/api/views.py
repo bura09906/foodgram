@@ -14,7 +14,7 @@ from recipes.models import (Favorite, Ingredient, Recipe, ShoppingCart,
 
 from .filters import IngredientFilter, RecipeFilter
 from .pagination import RecipePagination
-from .permissions import RecipePermissiom
+from .permissions import IsAuthorReciepOrReadonly
 from .serializers import (AvatarSerializer, IngredientSerializer,
                           RecipeActionSerializer, RecipeReadSerializer,
                           RecipeWriteSerializer, ShortLinkSerializer,
@@ -139,10 +139,8 @@ class IngredientViewSet(viewsets.ReadOnlyModelViewSet):
 
 
 class RecipeViewSet(viewsets.ModelViewSet):
-    queryset = Recipe.objects.all().select_related(
-        'author'
-    ).prefetch_related('ingredients')
-    permission_classes = [RecipePermissiom]
+    queryset = Recipe.objects.with_related_data()
+    permission_classes = [IsAuthorReciepOrReadonly]
     pagination_class = RecipePagination
     filter_backends = (DjangoFilterBackend,)
     filterset_class = RecipeFilter
@@ -157,28 +155,8 @@ class RecipeViewSet(viewsets.ModelViewSet):
         user = self.request.user
         queryset = super().get_queryset()
         if user.is_authenticated:
-            is_favorited_subquery = Favorite.objects.filter(
-                user=user, recipe=OuterRef('pk')
-            )
-            is_in_shopping_cart_subquery = ShoppingCart.objects.filter(
-                user=user, recipe=OuterRef('pk')
-            )
-            queryset = queryset.annotate(
-                is_favorited=Exists(is_favorited_subquery),
-                is_in_shopping_cart=Exists(is_in_shopping_cart_subquery)
-            )
-        else:
-            queryset = queryset.annotate(
-                is_favorited=Value(
-                    False,
-                    output_field=BooleanField()
-                ),
-                is_in_shopping_cart=Value(
-                    False,
-                    output_field=BooleanField()
-                )
-            )
-        return queryset
+            return queryset.annotation_relation_with_user(user)
+        return queryset.annotate_relation_with_anonymous()
 
     def get_serializer_class(self):
         if self.action in ['retrive', 'list']:

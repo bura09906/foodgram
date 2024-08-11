@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.db import models
+from django.db.models import BooleanField, Exists, OuterRef, Value
 
 from core.models import UserRecipeRelation
 
@@ -48,6 +49,36 @@ class Ingredient(models.Model):
         return self.name
 
 
+class RecipeQuerySet(models.QuerySet):
+
+    def with_related_data(self):
+        return self.select_related('author').prefetch_related('ingredients')
+
+    def annotation_relation_with_user(self, user):
+        is_favorited_subquery = Favorite.objects.filter(
+            user=user, recipe=OuterRef('pk')
+        )
+        is_in_shopping_cart_subquery = ShoppingCart.objects.filter(
+            user=user, recipe=OuterRef('pk')
+        )
+        return self.annotate(
+            is_favorited=Exists(is_favorited_subquery),
+            is_in_shopping_cart=Exists(is_in_shopping_cart_subquery)
+        )
+
+    def annotate_relation_with_anonymous(self):
+        return self.annotate(
+            is_favorited=Value(
+                False,
+                output_field=BooleanField()
+            ),
+            is_in_shopping_cart=Value(
+                False,
+                output_field=BooleanField()
+            )
+        )
+
+
 class Recipe(models.Model):
     author = models.ForeignKey(
         User,
@@ -84,6 +115,8 @@ class Recipe(models.Model):
         auto_now_add=True,
         db_index=True,
     )
+
+    objects = RecipeQuerySet.as_manager()
 
     class Meta:
         ordering = ['-pub_date']

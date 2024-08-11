@@ -1,7 +1,7 @@
 from rest_framework import permissions
 
 
-class RecipePermissiom(permissions.BasePermission):
+class IsAuthorReciepOrReadonly(permissions.BasePermission):
     def has_permission(self, request, view):
         return (
             request.method in permissions.SAFE_METHODS
@@ -11,5 +11,4 @@ class RecipePermissiom(permissions.BasePermission):
     def has_object_permission(self, request, view, obj):
         if request.method in permissions.SAFE_METHODS:
             return True
-        if request.method in ['PATCH', 'DELETE']:
-            return request.user and request.user == obj.author
+        return request.user and request.user == obj.author

@@ -2,6 +2,10 @@
 
 По адресу http://localhost изучите фронтенд веб-приложения, а по адресу http://localhost/api/docs/ — спецификацию API.
 
-Для входа в админ зону hot-recipe.hopto.org:
+ip: 158.160.8.113
+
+домен: hot-recipes.hopto.org
+
+Для входа в админ зону:
 почта: reviewer@mail.com
 пароль: 6ni-kNn-uJ9-pAP

@@ -257,21 +257,20 @@ class RecipeWriteSerializer(BaseRecipeSerializer):
 
         return value
 
-    @transaction.atomic
-    def create(self, validated_data):
-        ingredients_data = validated_data.pop('recipe_ingredient')
-        tags = validated_data.pop('tags')
-        recipe = Recipe.objects.create(**validated_data)
-
-        ingredients_for_recipe = []
+    def create_ingredietn_for_recipe(self, recipe, ingredients_data):
         ingredients_for_recipe = [
             RecipeIngredient(recipe=recipe, **ingredient_data)
             for ingredient_data in ingredients_data
         ]
         RecipeIngredient.objects.bulk_create(ingredients_for_recipe)
 
+    @transaction.atomic
+    def create(self, validated_data):
+        ingredients_data = validated_data.pop('recipe_ingredient')
+        tags = validated_data.pop('tags')
+        recipe = Recipe.objects.create(**validated_data)
+        self.create_ingredietn_for_recipe(recipe, ingredients_data)
         recipe.tags.set(tags)
-
         return recipe
 
     @transaction.atomic
@@ -279,19 +278,10 @@ class RecipeWriteSerializer(BaseRecipeSerializer):
         ingredients_data = validated_data.pop('recipe_ingredient')
         tags = validated_data.pop('tags')
         current_recipe = super().update(instance, validated_data)
-
         current_recipe.recipe_ingredient.all().delete()
-
-        new_ingredients = [
-            RecipeIngredient(recipe=current_recipe, **ingredient_data)
-            for ingredient_data in ingredients_data
-        ]
-        RecipeIngredient.objects.bulk_create(new_ingredients)
-
-        instance.tags.set(tags)
-
-        instance.save()
-        return instance
+        self.create_ingredietn_for_recipe(current_recipe, ingredients_data)
+        current_recipe.tags.set(tags)
+        return current_recipe
 
     def to_representation(self, instance):
         return RecipeReadSerializer(

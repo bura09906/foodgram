@@ -19,6 +19,8 @@ class UserAdmin(admin.ModelAdmin):
         ('Права доступа и статус', {'fields': [
             'is_staff',
             'is_active',
+            'groups',
+            'user_permissions',
         ]}),
     ]
     list_display = (
