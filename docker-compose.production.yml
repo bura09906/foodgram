@@ -21,7 +21,7 @@ services:
 
   frontend:
     env_file: .env
-    image: bura843/foodgram_frontend:latets
+    image: bura843/foodgram_frontend:latest
     command: cp -r /app/build/. /frontend_static/
     volumes:
       - static:/frontend_static
