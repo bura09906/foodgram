@@ -11,7 +11,7 @@ services:
       - pg_data:/var/lib/postgresql/data
 
   backend:
-    image: bura843/foodgram_backend:v0.1
+    image: bura843/foodgram_backend:latest
     env_file: .env
     depends_on:
       - db
@@ -21,7 +21,7 @@ services:
 
   frontend:
     env_file: .env
-    image: bura843/foodgram_frontend:v0.1
+    image: bura843/foodgram_frontend:latets
     command: cp -r /app/build/. /frontend_static/
     volumes:
       - static:/frontend_static
@@ -29,7 +29,7 @@ services:
         - backend
 
   infra:
-    image: bura843/foodgram_infra
+    image: bura843/foodgram_infra:latest
     volumes:
       - static:/staticfiles/
       - media:/app/media
