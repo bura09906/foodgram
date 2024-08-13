@@ -77,22 +77,24 @@ class UserviewSet(DjoserUserViewSet):
         permission_classes=[permissions.IsAuthenticated],
     )
     def subscribe(self, request, id=None):
-        if request.method == 'POST':
-            request.data['id'] = id
-            serializer = SubscribeSerializer(
-                data=request.data,
-                context={'request': request}
-            )
-            serializer.is_valid(raise_exception=True)
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        request.data['id'] = id
+        serializer = SubscribeSerializer(
+            data=request.data,
+            context={'request': request}
+        )
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
     @subscribe.mapping.delete
     def delete_subscribe(self, request, id=None):
         user = self.get_instance()
         author = get_object_or_404(User, id=id)
-        if user.subscription.filter(id=author.id).exists():
-            user.subscription.remove(author)
+        del_count, _ = User.subscription.through.objects.filter(
+            from_userprofile_id=user,
+            to_userprofile_id=author
+        ).delete()
+        if del_count:
             return Response(status=status.HTTP_204_NO_CONTENT)
         return Response(
             {"errors": "Подписка на автора не найдена"},
@@ -139,7 +141,6 @@ class IngredientViewSet(viewsets.ReadOnlyModelViewSet):
 
 
 class RecipeViewSet(viewsets.ModelViewSet):
-    queryset = Recipe.objects.with_related_data()
     permission_classes = [IsAuthorReciepOrReadonly]
     pagination_class = RecipePagination
     filter_backends = (DjangoFilterBackend,)
@@ -153,7 +154,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         user = self.request.user
-        queryset = super().get_queryset()
+        queryset = Recipe.objects.with_related_data()
         if user.is_authenticated:
             return queryset.annotation_relation_with_user(user)
         return queryset.annotate_relation_with_anonymous()
@@ -169,7 +170,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
         serializer.save(author=self.request.user)
 
     def action_create_for_reicpe(self, request, pk, model):
-        recipe = get_object_or_404(self.queryset, id=pk)
+        recipe = get_object_or_404(self.get_queryset(), id=pk)
         request.data['id'] = recipe.id
         serializer = self.get_serializer(
             data=request.data,
@@ -181,7 +182,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
     def action_delete_for_recipe(self, request, pk, model):
-        recipe = get_object_or_404(self.queryset, id=pk)
+        recipe = get_object_or_404(self.get_queryset(), id=pk)
         if not model.objects.filter(
             recipe=recipe, user=request.user
         ).exists():
