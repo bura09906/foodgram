@@ -6,6 +6,7 @@
 # Инструкция по развертываю:
 1. Клонировать репозиторий
 2. В папке /backend развернуть виртуальное окружение:
+
    команда для Windows:
    ```
    python -m venv venv
@@ -15,14 +16,15 @@
    python3 -m venv venv
    ```
 4. Активировать виртуальное окружение:
+
    команда для Windows:
    ```
    source venv/Scripts/activate
    ```
-  команда для Linux:
-  ```
+   команда для Linux:
+   ```
    source venv/bin/activate
-  ```
+   ```
 5. Установить зависимости из файла requirements.txt:
    ```
    pip install -r requirements.txt
